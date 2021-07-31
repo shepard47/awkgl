@@ -1,0 +1,25 @@
+#!/bin/ksh
+
+# todo: change type names
+# 		function parameters
+#		function loader
+#		version/profile
+#		fix void*
+
+cat $1 | sed 's/ comment=".*"//g' | awk '
+	/<enum /{split($3,n,"="); split($2,v,"=");
+	print "#define " substr(n[2],2,length(n[2])-2) " " substr(v[2],2,length(v[2])-2)}' > tmp
+
+sed -i 's|"/||g' tmp 
+sed -i '/* */d; /.*  .*/d' tmp 
+
+
+cat $1 | sed 's/ group=".*"//g; s/ class=".*"//g; s/ len=".*"//g; s/const //g; s/<name>//g' | awk '
+	/<proto>void/{printf "void " "(*" substr($2,1,length($2)-15) ")("};
+	/<proto><ptype>/{printf substr($1,15,length($1)-22) " " "(*" substr($2,1,length($2)-15) ")("}
+	/<param/{printf substr($1,15,length($1)-22) " " substr($2,1,length($2)-15) ", "};
+	/<[/]command>/{print ")" }' >> tmp 
+
+sed -i 's/>/*/g; s/const//g; s/, )/);/g' tmp
+
+
