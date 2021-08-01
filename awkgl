@@ -3,6 +3,7 @@
 # todo: change type names
 #		function loader
 #		version/profile
+#		GLhandleARB
 
 cat $1 | sed 's/ comment=".*"//g' | awk '
 	/<enum /{split($3,n,"="); split($2,v,"=");
@@ -19,5 +20,24 @@ cat $1 | sed 's/ group=".*"//g; s/ class=".*"//g; s/ len=".*"//g; s/const //g; s
 	/<[/]command>/{print ")" }' >> tmp 
 
 sed -i 's/>/*/g; s/const//g; s/, )/);/g; s/,  [*]/, void */g' tmp
-
+sed -i '
+	s/GLuint/uint/g;
+	s/GLboolean/uchar/g;
+	s/GLbitfield/uint/g;
+	s/GLbyte/char/g;
+	s/GLubyte/uchar/g;
+	s/GLshort/short/g;
+	s/GLushort/ushort/g;
+	s/GLint/int/g;
+	s/GLclampx/int/g;
+	s/GLsizei/int/g;
+	s/GLfloat/float/g;
+	s/GLclampf/float/g;
+	s/GLdouble/double/g;
+	s/GLclampd/double/g;
+	s/GLeglClientBufferEXT/void*/g;
+	s/GLeglImageOES/void*/g;
+	s/GLchar/char/g;
+	s/GLcharARB/char/g' tmp
+	
 
