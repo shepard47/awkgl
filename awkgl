@@ -4,6 +4,8 @@
 #		function loader
 #		version/profile
 #		GLhandleARB
+#		compatibility
+#		<remove>
 
 cat $1 | sed 's/ comment=".*"//g' | awk '
 	/<enum /{split($3,n,"="); split($2,v,"=");
@@ -39,5 +41,18 @@ sed -i '
 	s/GLeglImageOES/void*/g;
 	s/GLchar/char/g;
 	s/GLcharARB/char/g' tmp
-	
 
+delcomp(){
+	i=$1
+	for i in $(jot $i);
+	do
+		echo yoo
+	cat tmp2 | sed '1,/SECTION: GL API interface /d' | sed '/profile="compatibility"/,${d;/<[/]require>/q;}'  
+	done
+}
+
+n=$(cat $1 | sed '1,/SECTION: GL API interface /d' | grep 'profile="compatibility"' | wc -l) 
+cat $1 | sed '1,/SECTION: GL API interface /d' > tmp2 
+delcomp $n 
+#cat $1 | sed '1,/SECTION: GL API interface /d' | sed '/profile="compatibility"/,${d;/<[/]require>/q;}' 
+#sed -i '/profile="compatibility"/,/<[/]require>/{/profile="compatibility"/!{/<[/]require>/d;};}' tmp2
