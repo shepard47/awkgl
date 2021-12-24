@@ -4,27 +4,37 @@ import struct
 
 d = bpy.context.object.data
 
-"""
-    print('vert {}'.format(len(d.vertices)))
-    for v in d.vertices:
-       print('{} {} {} {} {} {}'.format(v.co.x, v.co.y, v.co.z, v.normal.x, v.normal.y, v.normal.z))
+with open("C:/Users/Admin/Downloads/obj.txt", 'w') as o:
+    sys.stdout = o
 
-    print('ind {}'.format(len(d.polygons)))
+    print('{} {}'.format(len(d.vertices), len(d.polygons)))
+    vb = []
+    
+    for f in d.polygons:
+        for v in f.vertices:
+            vert = []
+            for i in d.vertices[v].co:
+                vert.append(i)
+            for i in d.uv_layers.active.data[v].uv:
+                vert.append(i)
+            for i in d.vertices[v].normal:
+                vert.append(i)
+            vb.append(vert)
+
+    vert = [float] * 8
+    va = [vert] * len(d.vertices)
+
+    i = 0
+    for f in d.polygons:
+        for v in f.vertices:
+            va[v] = vb[i]
+            i += 1
+    i = 0
+    for v in d.vertices:
+        print(va[i])
+        i += 1
+    
     for f in d.polygons:
         for v in f.vertices:
             print('{} '.format(v), end='')
         print()
-"""
-with open("C:/Users/Admin/Downloads/obj.txt", 'w') as o:
-    sys.stdout = o
-
-    #print('vert {}'.format(len(d.vertices)))
-    for f in d.polygons:
-        for v in f.vertices:
-            for i in d.vertices[v].co:
-                print(i,end=' ')
-            for i in d.uv_layers.active.data[v].uv:
-                print(i,end=' ')
-            for i in d.vertices[v].normal:
-                print(i,end=' ')
-            print()
