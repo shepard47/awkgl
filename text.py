@@ -31,8 +31,10 @@ with open("C:/Users/Admin/Downloads/obj.txt", 'w') as o:
             i += 1
     i = 0
     for v in d.vertices:
-        print(va[i])
+        for j in va[i]:
+            print(j,end=' ')
         i += 1
+        print()
     
     for f in d.polygons:
         for v in f.vertices:
